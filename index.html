@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070a14">
+<meta name="description" content="NoyonX Video Downloader - fast, clean, self-hosted video downloader.">
+<title>NoyonX Video Downloader</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<main class="wrap">
+  <header class="top">
+    <div class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg></div>
+      <div><div class="brand">Noyon<b>X</b></div><div class="tag">VIDEO DOWNLOADER</div></div>
+    </div>
+    <div class="pill"><span class="dot"></span>Self-hosted engine</div>
+  </header>
+
+  <section class="hero">
+    <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Fast &middot; Clean &middot; No ads</div>
+    <h1>Download videos.<br><span>Your way.</span></h1>
+    <p>Paste a link, pick your quality and save it in seconds.</p>
+  </section>
+
+  <section class="card">
+    <div class="inputrow">
+      <div class="urlbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>
+        <input id="url" type="url" placeholder="Paste a video URL here…" autocomplete="url" spellcheck="false">
+        <button id="clearurl" class="iconbtn hidden" type="button" aria-label="Clear"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button id="paste" class="chipbtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h2"/></svg><span>Paste</span></button>
+      </div>
+      <button id="analyze" class="btn" type="button"><span class="lbl" style="display:inline-flex;align-items:center;gap:9px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Analyze URL</span></button>
+    </div>
+
+    <div class="keyrow"><input id="apikey" type="password" placeholder="Server API key (only if configured)" autocomplete="off"></div>
+    <div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><span>Only download content you own or have permission to save. Availability depends on the source.</span></div>
+
+    <div id="status" class="status" role="status">Ready when you are.</div>
+
+    <div id="video" class="video hidden">
+      <div class="thumbwrap"><img id="thumb" class="thumb" alt="Video thumbnail"><span id="dur" class="dur"></span></div>
+      <div>
+        <h3 id="title" class="vtitle"></h3>
+        <div id="meta" class="tags"></div>
+
+        <span class="lbl2">Output</span>
+        <div class="seg" id="fmtseg">
+          <button type="button" data-v="video" class="on"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>Video</button>
+          <button type="button" data-v="audio"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Audio MP3</button>
+        </div>
+
+        <div id="qwrap">
+          <span class="lbl2">Video quality</span>
+          <div class="chips" id="qchips"></div>
+        </div>
+
+        <select id="quality" class="vsel" aria-label="Video quality"><option value="best">Best available</option><option value="2160">Up to 4K</option><option value="1440">Up to 2K</option><option value="1080">Up to 1080p</option><option value="720">Up to 720p</option><option value="480">Up to 480p</option><option value="360">Up to 360p</option><option value="240">Up to 240p</option><option value="144">Up to 144p</option></select>
+        <select id="format" class="vsel" aria-label="Output"><option value="video">Video (MP4 preferred)</option><option value="audio">Audio (MP3)</option></select>
+
+        <div class="dlrow"><button id="download" class="btn" type="button"><span class="lbl" style="display:inline-flex;align-items:center;gap:9px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>Download now</span></button></div>
+      </div>
+    </div>
+
+    <div id="job" class="job hidden">
+      <div class="jobgrid">
+        <div class="ring" id="ring"><span id="percent">0%</span></div>
+        <div class="jobinfo">
+          <div id="jobtitle" class="jobtitle">Download job</div>
+          <div class="bar"><span id="bar"></span></div>
+          <div class="jobmeta"><span id="jobstate" class="state">Queued</span><span id="speed"></span><span id="eta"></span></div>
+        </div>
+      </div>
+      <div class="jobbtns">
+        <button id="cancel" class="btn sm danger" type="button">Cancel</button>
+        <button id="retry" class="btn sm ghost hidden" type="button">Resume</button>
+        <a id="save" class="btn sm green hidden" href="#"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>Save file</a>
+      </div>
+      <div id="joberror" class="joberror"></div>
+    </div>
+
+    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4v5c0 5-3.8 8.6-9 10-5.2-1.4-9-5-9-10V7l9-4z"/><path d="M9 12l2 2 4-4"/></svg><span>NoyonX does not bypass DRM, paywalls, private access controls or platform restrictions. Do not submit private URLs, login tokens or content you are not authorized to download.</span></div>
+  </section>
+
+  <div class="platforms">
+    <div class="plat-note">Works with many popular sources, powered by yt-dlp</div>
+    <span class="plat"><i style="background:#ff4d4d"></i>YouTube</span>
+    <span class="plat"><i style="background:#4d8dff"></i>Facebook</span>
+    <span class="plat"><i style="background:#ff5fa2"></i>Instagram</span>
+    <span class="plat"><i style="background:#4fe3f5"></i>TikTok</span>
+    <span class="plat"><i style="background:#8b6cff"></i>Twitter / X</span>
+    <span class="plat"><i style="background:#ffd43b"></i>Vimeo &amp; more</span>
+  </div>
+
+  <section class="features">
+    <div class="feat"><div class="fi a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>Lightning fast</h3><p>Queue-based engine with live speed and ETA.</p></div>
+    <div class="feat"><div class="fi b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/></svg></div><h3>Pick your quality</h3><p>From 144p up to 4K, or extract MP3 audio only.</p></div>
+    <div class="feat"><div class="fi c"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div><h3>Private &amp; self-hosted</h3><p>Runs on your own device. No tracking, no ads.</p></div>
+  </section>
+
+  <section class="section">
+    <div class="sechead">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Recent downloads</h2>
+      <button id="clear" class="btn sm ghost" type="button" style="min-height:36px;padding:0 14px;font-size:12.5px">Clear history</button>
+    </div>
+    <div id="history" class="history"><div class="empty">No download history yet.</div></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="cp">&copy; Copyright By <b>NoyonX Tech</b></div>
+  <div class="sub">Use responsibly &middot; Self-hosted media utility</div>
+</footer>
+
+<script src="/app.js" defer></script>
+</body>
+</html>
